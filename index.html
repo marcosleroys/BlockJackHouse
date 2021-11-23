@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>BlockJack House</title>
+    <!--===============================================================================================-->
+        <link rel="stylesheet" type="text/css" href="style.css">
+    <!--===============================================================================================-->
+    <!-- Latest compiled and minified CSS -->
+ 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+ 
+    <!-- Latest compiled and minified JavaScript -->
+ 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="./node_modules/web3/dist/web3.min.js"></script>
+    <!--===============================================================================================-->
+    </head>
+    <body>
+    <!--==================================== Instructions Modal =======================================-->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h3 class="modal-title" id="exampleModalLabel">Instructions</h3>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <h2>Welcome to BlockJack House, the casino for crypto high rollers.</h2>
+                    <ul>
+                        <li>Please make sure to accept every TX pop-up, otherwise the platform <u>won't let you continue playing.</u></li> <br>
+                        <li>When entering platform, always do <b>connect wallet</b> to conect your Metamask account. This will enable the other functions.</li> <br>
+                        <li>After connecting wallet, you can do <b>log in</b> to enable the rest of the functions. A TX will pop-up if the account isn't created.</li> <br>
+                        <li>With this options you can do <b>cash in</b> or <b>cash out</b> to trade BJX tokens for ether or viceversa. You can also <b>shuffle the deck.</b></li> <br>
+                        <li>Cash in and out <b>amounts are restricted to 1 or more ethers.</b> That's why this is for <i>crypto high rollers.</i> :)</li> <br>
+                        <li>When you <b>shuffle the deck</b>, you must wait for TX to get finished, to check if it's finished you can click in <b>check shuffled.</b> </li> <br>
+                        <li>When clicking in <b>check shuffled</b> it will only allow you to bet in the game after the <u>shuffle deck event</u> triggers.</li> <br>
+                        <li>Now you can decide how much BJX to bet by clicking on <b>bet (Amount)</b> and this will activate a game and lock your bet.</li> <br>
+                        <li>When the game activates, it allows you to <b>hit</b> or <b>stand</b>, and after the game is finished you can play again and use the other functions.</li> <br>
+                        <li>Clicking shuffle deck again is not recommended, this will charge gas for the TX.</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-sm-4 text-center">
+                <h2 style="font-weight: 1000; padding-left: 1cm;">The BlockJack House</h2>
+            </div>
+            <div class="col-sm-4 text-center"></div>
+            <div class="col-sm-4 text-center" style="margin-top: .5cm;">
+                <button class="btn btn-info" id="instructionsButton" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Instructions</button>
+            </div>
+        </div>
+        <br>
+        <div class="row text-center">
+            <h3 id="playermoney"></h3>
+            <button class="debutton btn btn-info" id="betButton" onClick="deal(1)">Bet 1 BJX</button>		   
+            <button class="debutton btn btn-info" id="betButton" onClick="deal(2)">Bet 2 BJX</button>		
+            <button class="debutton btn btn-info" id="betButton" onClick="deal(5)">Bet 5 BJX</button>		
+            <button class="debutton btn btn-info" id="betButton" onClick="deal(10)">Bet 10 BJX</button>
+        </br>
+        </div>
+        <br>
+        <div class="row justify-content-center">
+            <div class="col-sm-4 text-center">
+                <button class="btn btn-warning" id="shuffleButton" style="margin: 5px;">Shuffle Deck</button><br>
+                <button class="btn btn-warning" id="checkShuffledButton" style="margin: 5px;">Check Shuffled</button><br>
+            </div>
+            <div class="col-sm-4" style="border:3px solid black; background-color: antiquewhite;">
+                <br>
+                
+                DEALER'S CARDS:
+                <br>
+                <br>
+                <div class="text-center" id="dealercards">.---..---.</br>|///||///|</br>|///||///|</br>|///||///|</br>'---''---'</div>
+                <br>
+                DEALER'S SCORE:
+                <span id="dealerscore"></span>
+                </br>
+                <br>
+                <br>
+                YOUR CARDS:<div class="text-center" id="playercards">.---..---.</br>|///||///|</br>|///||///|</br>|///||///|</br>'---''---'</div>
+                YOUR SCORE:<span id="playerscore"></span></br>
+                
+            </div>
+            
+            <div class="col-sm-4 text-center">
+                <button class="btn btn-warning" id="enableEthereumButton" style="margin: 5px;">Connect Wallet</button><br>
+                <button class="btn btn-warning" id="logInButton" style="margin: 5px;"> Log In </button><br>
+                <span id="cashInSpan">
+                    <button class="btn btn-warning" id="cashInButton" style="margin: 5px;"> Cash In </button> <input type="text" id="cashInInput" placeholder="Amount in ETH" style="width: 3cm;"> 
+                </span>
+                <br>
+                <span id="cashOutSpan">
+                    <button class="btn btn-warning" id="cashOutButton" style="margin: 5px;"> Cash Out </button> <input type="text" id="cashOutInput" placeholder="Amount in ETH" style="width: 3cm;">
+                </span>
+                <br>
+                <span id="withdrawSpan">
+                    <button class="btn btn-warning" id="withdrawButton" style="margin: 5px;"> Withdraw </button> <input type="text" id="withdrawInput" placeholder="Amount in ETH" style="width: 3cm;">
+                </span>
+                <br>
+            </div>
+        </div>
+        <br>
+        <div class="row text-center">
+            <button class="btn btn-success" id="htbutton" onClick="hit()">HIT</button>
+            <button class="btn btn-danger" id="stbutton" onClick="stand()">Stand</button>
+        </div>
+
+        <h3 id="message" style="padding-left: 5cm;"></h3>
+        <!--===============================================================================================-->
+        <script src="blockchainScript.js"></script>
+        <!--===============================================================================================-->
+        <script src="gameScript.js"></script>
+        <!--===============================================================================================-->
+        
+	</body>
+</html>

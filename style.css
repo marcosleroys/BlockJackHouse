@@ -1,0 +1,40 @@
+* {
+	font-family: monospace;
+}
+
+#htbutton {
+  visibility: hidden;
+}
+
+#stbutton {
+  visibility: hidden;
+}
+
+#logInButton {
+  visibility: hidden;
+}
+
+#shuffleButton {
+  visibility: hidden;
+}
+
+#checkShuffledButton {
+  visibility: hidden;
+}
+
+#betButton {
+  visibility: hidden;
+}
+
+
+#cashInSpan {
+  visibility: hidden;
+}
+
+#cashOutSpan {
+  visibility: hidden;
+}
+
+#withdrawSpan {
+  visibility: hidden;
+}
